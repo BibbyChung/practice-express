@@ -7,6 +7,7 @@ import createError from "http-errors";
 import { setupRouter } from "./routes/_index";
 import { setupSocketio } from "./socketio/_index";
 import { logger } from "./utils/logger";
+import { setupRedis } from "./utils/redis";
 
 const app = express();
 app.use(express.json());
@@ -15,10 +16,13 @@ app.use(cookieParser());
 // this is the default port that App runs your React app on
 app.use(cors({ origin: `http://localhost:4200` }));
 
+// set up redis
+setupRedis();
+
 // API Group Routes
 setupRouter(app);
 
-// handle 404 error
+// Handle 404 error
 app.use((req: Request, res: Response, next: Function) => {
   next(createError(404));
 });

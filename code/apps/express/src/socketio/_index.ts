@@ -5,9 +5,12 @@ import {
   InterServerEvents,
   ServerToClientEvents,
   SocketData,
-} from "~/types";
-import { setupVoteSocketio } from "./vote.socketio";
+} from "~/_types";
 import { logger } from "~/utils/logger";
+import { setupVoteSocketio } from "./vote.socketio";
+
+import { createAdapter } from "@socket.io/redis-adapter";
+import { getRedis } from "~/utils/redis";
 
 // the client will pass an auth "token" (in this simple case, just the username)
 // to the server on initialize of the Socket.IO client in our React App
@@ -29,6 +32,10 @@ export const setupSocketio = (
   server: HttpServer<typeof IncomingMessage, typeof ServerResponse>,
   npsName: string
 ) => {
+  // setup for redis
+  const pubClient = getRedis();
+  const subClient = pubClient.duplicate();
+
   // passing these generic type parameters to the `Server` class
   // ensures data flowing through the server are correctly typed.
   const io = new Server<
@@ -37,6 +44,7 @@ export const setupSocketio = (
     InterServerEvents,
     SocketData
   >(server, {
+    adapter: createAdapter(pubClient, subClient),
     cors: {
       origin: `http://localhost:3000`,
       methods: ["GET", "POST"],

@@ -1,5 +1,6 @@
 import { Express, Request, Response } from "express";
-import { test01Router } from "~/routes/test01Routes";
+import { test01Router } from "~/routes/test01.routes";
+import { authRouter } from "~/routes/auth.routes";
 
 export const setupRouter = (app: Express) => {
   app.get("/", (req: Request, res: Response) => {
@@ -12,4 +13,5 @@ export const setupRouter = (app: Express) => {
   });
 
   app.use("/test01", test01Router);
+  app.use("/guest", authRouter);
 };

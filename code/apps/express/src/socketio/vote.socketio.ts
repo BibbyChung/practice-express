@@ -5,7 +5,7 @@ import {
   PollState,
   ServerToClientEvents,
   SocketData,
-} from "~/types";
+} from "~/_types";
 import { logger } from "~/utils/logger";
 
 // the server determines the PollState object, i.e. what users will vote on
