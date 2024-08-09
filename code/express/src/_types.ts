@@ -1,32 +1,26 @@
 type PollState = {
-  question: string;
+  question: string
   options: {
-    id: number;
-    text: string;
-    description: string;
-    votes: string[];
-  }[];
-};
+    id: number
+    text: string
+    description: string
+    votes: string[]
+  }[]
+}
 
 type ClientToServerEvents = {
-  vote: (optionId: number) => void;
-  askForStateUpdate: () => void;
-};
+  vote: (optionId: number) => void
+  askForStateUpdate: () => void
+}
 
 type ServerToClientEvents = {
-  updateState: (state: PollState) => void;
-};
+  updateState: (state: PollState) => void
+}
 
-type InterServerEvents = {};
+type InterServerEvents = {}
 
 type SocketData = {
-  user: string;
-};
+  user: string
+}
 
-export type {
-  PollState,
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData,
-};
+export type { PollState, ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData }
