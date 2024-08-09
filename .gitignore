@@ -137,5 +137,6 @@ uploads/
 
 # Other
 .env
-package-lock.json
 bun.lockb
+
+node_modules

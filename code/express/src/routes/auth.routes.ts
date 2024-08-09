@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import Router from "express-promise-router";
 import createError from "http-errors";
-import { signAccessToken } from "~/middleware/authMiddleware";
+import { signAccessToken } from "~/middleware/auth";
 import { isPasswordMatch } from "~/utils/encryption";
 
 export const authRouter = Router();
