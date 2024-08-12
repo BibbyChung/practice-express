@@ -1,11 +1,11 @@
 import { Server as HttpServer, IncomingMessage, ServerResponse } from 'http'
-import { Namespace, Server, Socket } from 'socket.io'
+import { Server, Socket } from 'socket.io'
 import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from '~/_types'
 import { logger } from '~/utils/logger'
-import { setupVoteSocketio } from './vote.socketio'
 
 import { createAdapter } from '@socket.io/redis-adapter'
 import { getRedis } from '~/utils/redis'
+import { chatIO } from './chat.io'
 
 // the client will pass an auth "token" (in this simple case, just the username)
 // to the server on initialize of the Socket.IO client in our React App
@@ -20,7 +20,7 @@ const addUserToSocketDataIfAuthenticated = async (socket: Socket, next: (err?: E
   next()
 }
 
-export const setupSocketio = (
+export const setupIO = (
   server: HttpServer<typeof IncomingMessage, typeof ServerResponse>,
   npsName: string,
 ) => {
@@ -35,7 +35,7 @@ export const setupSocketio = (
     {
       adapter: createAdapter(pubClient, subClient),
       cors: {
-        origin: `http://localhost:3000`,
+        // origin: `http://localhost:3000`,
         methods: ['GET', 'POST'],
       },
     },
@@ -48,20 +48,33 @@ export const setupSocketio = (
 
   const nsp = io.of(npsName)
   nsp.on('connection', (socket) => {
-    logger.info(socket.client)
-    logger.info('a user connected', socket.data.user)
+    // client端在建立連接時帶的參數
+    const socketId = socket.id
+    const token = socket.handshake.auth?.token
+    const roomId = socket.handshake.query?.roomId ?? []
+
+    // logger.info({
+    //   socketId,
+    //   token,
+    //   roomId,
+    // })
+
+    if (!roomId) {
+      return
+    }
+    socket.join(roomId)
 
     socket.on('disconnect', () => {
-      logger.info('user disconnected')
+      logger.info('roomId disconnected')
     })
 
-    setupSocketioAction(socket, nsp)
+    setupSocketioAction(socket, roomId)
   })
 }
 
 const setupSocketioAction = (
   socket: Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>,
-  nsp: Namespace<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>,
+  roomId: string | string[],
 ) => {
-  setupVoteSocketio(socket, nsp)
+  chatIO(socket, roomId)
 }

@@ -15,8 +15,8 @@
     </nav>
     <div>
       <Route path="/"><Home></Home></Route>
-      <Route path="/chat/:id" let:params>
-        <Chat01 id={params.id}></Chat01>
+      <Route path="/chat/:roomId" let:params>
+        <Chat01 roomId={params.roomId}></Chat01>
       </Route>
     </div>
   </div>

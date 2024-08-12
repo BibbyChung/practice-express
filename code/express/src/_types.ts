@@ -1,4 +1,4 @@
-type PollState = {
+export type PollState = {
   question: string
   options: {
     id: number
@@ -8,19 +8,26 @@ type PollState = {
   }[]
 }
 
-type ClientToServerEvents = {
+export type msgInfoType = {
+  userId: string
+  msg: string
+}
+
+export type ClientToServerEvents = {
   vote: (optionId: number) => void
   askForStateUpdate: () => void
+
+  msg: (msgInfo: msgInfoType) => void
 }
 
-type ServerToClientEvents = {
+export type ServerToClientEvents = {
   updateState: (state: PollState) => void
+
+  msg: (msgInfo: msgInfoType) => void
 }
 
-type InterServerEvents = {}
+export type InterServerEvents = {}
 
-type SocketData = {
+export type SocketData = {
   user: string
 }
-
-export type { PollState, ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData }

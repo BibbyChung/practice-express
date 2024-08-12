@@ -5,7 +5,7 @@ import express, { NextFunction, Request, Response } from 'express'
 import http from 'http'
 import createError from 'http-errors'
 import { setupRouter } from './routes/_index'
-import { setupSocketio } from './socketio/_index'
+import { setupIO } from './socketio/_index'
 import { logger } from './utils/logger'
 import { setupRedis } from './utils/redis'
 
@@ -37,7 +37,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 const server = http.createServer(app)
 
 // set up socket.io
-setupSocketio(server, '/api/001')
+setupIO(server, '/socketio/001')
 
 // app start
 server.listen(process.env.PORT, () => {
