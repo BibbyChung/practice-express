@@ -9,7 +9,6 @@
   const btnWSStop$ = getSubject<boolean>()
 
   const domain = 'http://localhost:3000'
-
   const user$ = btnGetUser$.pipe(
     switchMap(() => {
       return fromFetch(`${domain}/user/123`).pipe(switchMap((rep) => rep.json()))
