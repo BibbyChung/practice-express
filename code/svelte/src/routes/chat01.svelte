@@ -1,7 +1,7 @@
 <script lang="ts">
   import { filter, scan, startWith, switchMap, tap } from 'rxjs'
   import { onMount } from 'svelte'
-  import { getIO } from '../lib/common/io'
+  import { disconnectIO, getIO } from '../lib/common/io'
   import { getObservable, getSubject } from '../lib/services/layout.service'
 
   type msgType = {
@@ -50,6 +50,12 @@
     }, [] as msgType[]),
     startWith([])
   )
+
+  onMount(() => {
+    return () => {
+      disconnectIO(roomId)
+    }
+  })
 </script>
 
 <div class="flex flex-row items-end h-[calc(100vh_-_8vh)]">

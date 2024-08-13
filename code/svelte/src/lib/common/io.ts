@@ -5,7 +5,11 @@ const socketioUrl = 'ws://localhost:3000/socketio/001'
 let socketMap = new Map<string, Socket<ServerToClientEvents, ClientToServerEvents>>()
 export const getIO = (roomId: string) => {
   if (socketMap.has(roomId)) {
-    return socketMap.get(roomId)!
+    const oo = socketMap.get(roomId)!
+    if (oo.disconnected) {
+      oo.connect()
+    }
+    return oo
   }
   const iioo = io(socketioUrl, {
     query: {
@@ -17,4 +21,12 @@ export const getIO = (roomId: string) => {
   })
   socketMap.set(roomId, iioo)
   return iioo
+}
+
+export const disconnectIO = (roomId: string) => {
+  const io = getIO(roomId)
+  if (io.connected) {
+    io.off()
+    io.disconnect()
+  }
 }
